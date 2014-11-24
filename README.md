@@ -223,14 +223,24 @@ For the remainder of this tutorial, I will focus on another very important aspec
 
 This is a good opportunity to recap the basics of HTTP, since you must understand HTTP clearly to properly understand how to program such a website. HTTP is a request-response protocol: There are things called "clients" that sends requests, and there are things called servers that "serves" these requests with a response. The protocol is the foundation of the the World Wide Web, which kind of means it's the foundation of the Internet, which kind of means it's the foundation of all things you love and hold dear. The most familiar HTTP client is your own web browser. A server is whatever program answers these requests: we built one in Lesson 3 when we talked about backend programming.
 
+(Meta: This section should be refactored to include more demo with network monitor and less/no talking about requests/responses in plaintext. Also need to talk about request payload for POST requests, since we use it later.)
+
 This is conceptually what a request looks like: 
 ```
-host: https://www.wireshark.org
+host: www.wireshark.org
 method: GET
 # other-fields we don't really care about at the moment
 ```
 **host**: The address where you're sending the requests. Gets resolved to an IP address eventually by DNS servers.
 **method**: These are also known as HTTP _verbs_. Can be one of GET, POST, DELETE, PUT, PATCH, OPTIONS, HEAD etc, and more or less defines a *type* for the request. New verbs must be defined in an RFC by standardization organizations - you cannot make up your own HTTP verb.
+
+Requests can sometime contain more data. For example, if you fill out a form and click submit, the browser packs all the information you entered at the end of the request. This data is often known as **request payload**. Here is an example:
+
+```
+host: http://api
+
+
+
 
 So this request gets pushed from router to router until it finally arrives at whichever server is serving www.wireshark.org. The server looks at the request, thinks for a bit, and sends back an appropriate response. Here is what a response looks like:
 
@@ -243,14 +253,16 @@ content-type: text/html
     <!-- lots of html here -->
 </html>
 ```
-
+```
 
 **Content-type** What type of content it is. Compare with the accept header field in request. Can be one of "text/html", "application/json", "application/xml" etc. See http://en.wikipedia.org/wiki/Internet_media_type#Type_image for a big list of standardized types.
 **Status Code**: The general status of the request, so that clients can get a hint of what happened even without looking at the returned content. Many status codes are defined; you can find a big list of them here: http://en.wikipedia.org/wiki/List_of_HTTP_status_codes 
 
 In general, any 2xx code means some form of success (e.g. 200 OK, 201 Created, 202 Accepted), 3xx codes mean Redirection (e.g. 301 Moved Permanently, 302 Found), 4xx codes mean Client error (i.e. you sent a stupid request and the server hates you), (e.g. 403 Forbidden, 404 Not Found, and 418 [I'm a teapot](http://en.wikipedia.org/wiki/Hyper_Text_Coffee_Pot_Control_Protocol)), 5xx means server error (i.e. completely legitimate request, but the server screwed up at some point trying to serve it) (e.g. 500 Internal Server Error, 503 Service Unavailable).
 
-When you load the jsdemo.html page, do you know how many HTTP requests the browser makes? It is worth looking through the HTML code and thinking about it for a bit. How would you find out for sure? Chrome has a very handy network monitor that let's you see exactly what requests the browser is making. Open the developer tools, and navigate to the Network tab. Now reload the page. You should see at least four requests being made:
+(endMeta)
+
+When you load the jsdemo.html page, do you know how many HTTP requests the browser makes? It is worth looking through the HTML code and thinking about it for a bit. How would you find out for sure? Chrome has a very handy network monitor that lets you see exactly what requests the browser is making. Open the developer tools, and navigate to the Network tab. Now reload the page. You should see at least four requests being made:
 
 ![network](screenshots/network.png)
 
