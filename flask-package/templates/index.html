@@ -1,0 +1,20 @@
+<html>
+  <head>
+    <title>JS 101</title>
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="static/livecount.js"></script>
+    <script src="static/ajaxmagic.js"></script>
+    <link rel="stylesheet" href="static/jsdemo-styles.css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="charCountDiv">Number of characters: <span id="charCount">0</span></div>
+      <form id="messageForm" action="/messages" method="post">
+        <input type="text" placeholder="Name" id="inputName">
+        <textarea placeholder="Enter your message here" id="inputText" name="message" cols="50" rows="4"></textarea>
+        <input type="submit" value="Submit">
+      </form>
+      </div>
+    </div>
+  </body>
+</html>
