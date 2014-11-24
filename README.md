@@ -21,9 +21,9 @@ Hello everyone, we will start off with a quick review of javascript, please chec
 
 Hopefully now that we're more comfortable with the JavaScript syntax, let's see how we can change contents of the page using JavaScript. 
 
-We will be using a very popular JavaScript library called jQuery, which will make a lot of the operations much easier. Although this tutorial will extensively use jQuery, you should always keep in mind that anything you can do with jQuery can also be done without jQuery, and often it's not even that hard to do. The advantages of using jQuery include it has a very clean and uniform interface, and it masks all the complications of browser compatibility. This of course comes at the cost of the overhead of loading such a massive library.
+We will be using a very popular JavaScript library called jQuery, which gives us two advantages: it has a very clean and uniform interface, and it masks all the complications of browser compatibility. 
 
-All right then, let's try adding jQuery to our code. 
+Let's begin with adding jQuery to our code. 
 Please open jsdemo.html, and add the following like to the `head` section.
 ```html
 <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
@@ -39,7 +39,7 @@ If everything goes on okay, you will see the following:
 
 There is nothing magical about `$`: It is just a regular variable. It holds the massive jQuery object as its value, and all the jQuery functions are accessible through this object. In fact, we could assign the value of `$` to some other variable (say `jq`), and obtain all the jQuery functions through that variable. 
 ![nonmagical$](screenshots/jqJustAVar.png)
-Since JavaScript does not offer namespacing by default, if all the jQuery functions were available in the global namespace, you would very possibly sooner or later accidentally call a jQuery function without knowing. But since all the functions are now inside `$`, we will now write `$.get` instead of just `get`. This forces us to be aware that we're using a jQuery function, and thus reduces the chances of bugs.
+Since JavaScript does not offer namespacing by default, if all the jQuery functions were available in the global namespace, you would very possibly sooner or later accidentally call a jQuery function without knowing. But since all the functions are now inside `$`, we have to write `$.get` instead of just `get`. This forces us to be aware that we're using a jQuery function, and thus reduces the chances of bugs.
 
 In tutorial 3, we made a comment box for the site. In `jsdemo.html`, we've set up a similar comment box:
 ```html
@@ -49,7 +49,7 @@ In tutorial 3, we made a comment box for the site. In `jsdemo.html`, we've set u
 </form>
 ```
 
-Now let's say we want to count the number of characters in the textbox. We could, of course, click submit, and look at the text content on the server, count the characters, and send back a rerendered page with the number of characters, but that's clunky and requires reloading the page everytime. We want to do this live.
+Let's say we want to count the number of characters in the textbox. We could, of course, click submit, and look at the text content on the server, count the characters, and send back a rerendered page with the number of characters, but that's clunky and requires reloading the page everytime. We want to do this live.
 
 First order of business: Let's add another div on top.
 ```html
@@ -134,7 +134,7 @@ Events are associated with a particular DOM element, and with lots and lots of g
 var textbox = $("#inputText");  // Selecting the correct element
 textbox.on("input", updateCount);
 ```
-Notice how we casually passed in a function as the argument of another function. Now everytime the "input" event is raised/fired on the textbox, the updateCount function will be executed. Now we type some text into the textbox, and lo and behold, the count updates live!
+Notice how we casually passed in a function as the argument of another function. Now every time the "input" event is raised/fired on the textbox, the updateCount function will be executed. Now we type some text into the textbox, and lo and behold, the count updates live!
 
 ## Putting it into a script, and document.ready
 
@@ -216,7 +216,7 @@ $(document).on("ready", livecount);
 We reload the page, and rejoice, everything is working!   
 
 ## Other jQuery things
-In this example, we changed the text value of an element, but using jQuery you can pretty much make any modification to the page you can imagine. You can add/remove classes to elements, modify ids of elements, change css properties properties, and add childNodes to a page. You can event have cool animating transitions. I could give you a laundry list of all the jQuery functions and objects, but you're much better off heading over to http://learn.jquery.com/, where they have excellent tutorials on how to do all of these things.
+In this example, we changed the text value of an element, but using jQuery you can pretty much make any modification to the page you can imagine. You can add/remove classes to elements, modify ids of elements, change css properties, and dynamically add/remove nodes from the DOM tree. You can even have cool animating transitions. I could give you a laundry list of all the jQuery functions and objects, but you're much better off heading over to http://learn.jquery.com/, where they have excellent tutorials on how to do all of these things.
 
 ## Keeping in touch with the server
 For the remainder of this tutorial, I will focus on another very important aspect of modern web development: communication between the web browser and the server without reloading the page. This is often referred to as *Ajax*.
@@ -227,14 +227,10 @@ This is conceptually what a request looks like:
 ```
 host: https://www.wireshark.org
 method: GET
-accept: text/html, application/xhtml+xml
-user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.65 Safari/537.36
 # other-fields we don't really care about at the moment
 ```
 **host**: The address where you're sending the requests. Gets resolved to an IP address eventually by DNS servers.
 **method**: These are also known as HTTP _verbs_. Can be one of GET, POST, DELETE, PUT, PATCH, OPTIONS, HEAD etc, and more or less defines a *type* for the request. New verbs must be defined in an RFC by standardization organizations - you cannot make up your own HTTP verb.
-**accept**: What type of content you're expecting. Browsers accept `text/html`when loading pages, `image/png` when trying to load png images etc. Web servers can inspect this header field and serve different content depending on your needs. For example, it is very common that to get XML vs JSON content from APIs using this field. A call to `api.coolsoft.com/posts` can return an XML document if your `accept` header field is set to `application/xml`, and return JSON if your `accept` header field is set to `application/json`. 
-**user-agent**: It identifies your client. For a hilarious history of why the user-agent string is such a mess, see here: http://webaim.org/blog/user-agent-string-history/
 
 So this request gets pushed from router to router until it finally arrives at whichever server is serving www.wireshark.org. The server looks at the request, thinks for a bit, and sends back an appropriate response. Here is what a response looks like:
 
@@ -286,7 +282,7 @@ The flask-package directory in the git repo has the code of an app that consumes
 
 The server serves index.html, which is the same jsdemo.html page with an additional name input field.
 
-The server also defines a endpoint at `/messages`, which has the interesting property that it accepts both `GET` and `POST` request, and exhibits different behaviour depending on what the request type is: 
+The server also defines an endpoint at `/messages`, which has the interesting property that it accepts both `GET` and `POST` request, and exhibits different behaviour depending on what the request type is: 
 ```python
 message_list = []
 
@@ -330,11 +326,11 @@ If you switch the request type to `GET`, you now get back the following response
 
     [{"message": "boooo", "name": "Spooky"}]
 
-At this point, we're reasonably confident that our server is working the way we want, and we can move on.
+You can try POSTing a few more messages and check they all gets returned with the GET request. At this point, we're reasonably confident that our server is working the way we want, and we can move on.
 
 ## POSTing without reloading
 
-Okay now we want to post the data to the server from the form, but we want to do this without reloading the page. We navigate to http://localhost:5000 to get back to the root page. If we use the submit button now, it will not work: First, because the default behavior of form submission is to leave the current page and lost whatever response the the action method sends as a response, and second, because the form POST request sends the data as a POST-encoded string, not a json string. Our server is now used to expecting a clean json string as request payload.
+Okay now we want to post the data to the server from the form, but we want to do this without reloading the page. We navigate to http://localhost:5000 to get back to the root page. If we use the submit button now, it will not work: First, because the default behavior of form submission is to leave the current page and load whatever response the the action method sends as a response; and second, because by default the submit forms send the data as a POST-encoded string, not a json string. Our server is now used to expecting a clean json string as request payload.
 
 This is where we first use the issue HTTP requests through jQuery. Our swiss army knife for all http communication will be the `$.ajax` function. We create a new javascript file called `liveupdate.js`. The functions we are going to write now will be too big and complicated to test on the console directly, so we will wrap our code in a function called test for now, and call that function from the console.
 ```javascript
@@ -353,11 +349,23 @@ Now that we have our testing loop set up, we focus on the jQuery function to sen
 ```javascript
 var test = function() {
     $.ajax({
-        url: "http://localhost:5000/messages",  // It's important to include http
-        data: '{"name": "Alice", "message": "hey"}',  // Note that it's a string
-        type: "POST",  // Not a GET 
-        contentType: "application/json",  // Indicating we're sending json
-        success: function() {
+        // Where to send the request
+        // Determines what goes into the "host" header of the request
+        // It's important to include the full url, including "http://"
+        url: "http://localhost:5000/messages",
+
+        // Note that this is the string. This is the request payload
+        data: '{"name": "Alice", "message": "hey"}',  
+
+        // The http verb
+        type: "POST",
+
+        // Indicating we're sending json (as opposed to form encoded data or xml)
+        contentType: "application/json",
+        
+        // A callback function to be executed upon success
+        // It's passed in the returned data as the first argument
+        success: function(data) {
             console.log("Successful POST request :)")
         }  // A function that gets executed upon seccessful request
     });
@@ -695,6 +703,8 @@ $(document).on("ready", liveupdate);
 ```
 
 We refresh the page, check that everything is working, and call it a day. 
+
+You could of course do all of the things we have done today using plain JavaScript. It's a fantastic exercise to figure out how to do the few things we've done today without using jQuery. 
 
 ----------
 
