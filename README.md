@@ -1,8 +1,9 @@
 Lesson 5: Interactivity and more JavaScript
+===========================================
 
 (Meta: to be deleted)
 
-I won't be covering too much detail about jquery - I'd rather send people over to the jQuery tutorials, which is quite accessible and comprehensive. I'll introduce the key features of JavaScript they should be aware of (most importantly functions in variables), talk about the basic concept of selecting an element an doing something with it (and introducing new tags/ids/classes to help select something better), how to work with the console and develop iteratively by testing commands work interactively and building functions out of them, what events are in general, and issues with document.ready etc that stump a lot of newcomers. Then I'll give a quick demo of how to do HTTP requests in the background, which will require a small recap of HTTP requests. I'll also show the chrome network monitor and debugger, just so that they know these exist and are useful.
+I won't be covering too much detail about jquery - I'd rather send people over to the jQuery tutorials, which is quite accessible and comprehensive. I'll introduce the key features of JavaScript they should be aware of (most importantly functions in variables), talk about the basic concept of selecting an element an doing something with it (and introducing new tags/ids/classes to help select something better), how to work with the console and develop iteratively by testing commands interactively and building functions out of them, what events are in general, and issues with document.ready etc that stump a lot of newcomers. Then I'll give a quick demo of how to do HTTP requests in the background, which will require a small recap of HTTP requests. I'll also show the chrome network monitor and debugger, just so that they know these exist and are useful.
 
 Overview:
 -  10-15 minute overview of Javascript syntax
@@ -40,7 +41,7 @@ There is nothing magical about `$`: It is just a regular variable. It holds the 
 ![nonmagical$](screenshots/jqJustAVar.png)
 Since JavaScript does not offer namespacing by default, if all the jQuery functions were available in the global namespace, you would very possibly sooner or later accidentally call a jQuery function without knowing. But since all the functions are now inside `$`, we will now write `$.get` instead of just `get`. This forces us to be aware that we're using a jQuery function, and thus reduces the chances of bugs.
 
-In tutorial 3, you guys made a comment box for your site. In `jsdemo.html`, we've set up a similar comment box:
+In tutorial 3, we made a comment box for the site. In `jsdemo.html`, we've set up a similar comment box:
 ```html
 <form action="/submit_message" method="post">
   <textarea placeholder="Enter your message here" id="inputText" name="message" cols="50" rows="4"></textarea>
@@ -182,7 +183,7 @@ So we fix the head section:
 </head>
 ```
 
-But it's STILL not working! Worse, the console doesn't also have any error message this time, so you don't even know how to start looking for errors. The thing to do at this point is to search for similar problems on Google, and maybe skim through some jQuery and JavaScript tutorials to see if someone mentions anything like this. If all else fails, ask for help on StackOverflow, or if you're scared to post there, ask on Hack101 discussion board here!
+But it's STILL not working! Worse, the console doesn't also have any error message this time, so you don't even know how to start looking for errors. The thing to do at this point is to search for similar problems on Google, and maybe skim through some jQuery and JavaScript tutorials to see if someone mentions anything like this. If all else fails, ask for help on StackOverflow, or if you're scared to post there, ask on the Hack101 discussion board!
 
 The thing we're doing wrong here is that the script livecount.js is loaded and executed in the head tag. The browser hasn't even taken a look at the body section yet, and therefore the DOM does not yet contain any element with id "inputText". In the line `var textbox = $("#inputText");`, `textbox` therefore becomes an empty element, and our event_handlers do not get attached properly.
 
@@ -218,7 +219,7 @@ We reload the page, and rejoice, everything is working!
 In this example, we changed the text value of an element, but using jQuery you can pretty much make any modification to the page you can imagine. You can add/remove classes to elements, modify ids of elements, change css properties properties, and add childNodes to a page. You can event have cool animating transitions. I could give you a laundry list of all the jQuery functions and objects, but you're much better off heading over to http://learn.jquery.com/, where they have excellent tutorials on how to do all of these things.
 
 ## Keeping in touch with the server
-For the remainder of this tutorial, I will focus on another very important aspect of modern web development: communication between the web browser and the server without reloading the page. This is often referred to as *Ajax*, although the name doesn't mean much.    
+For the remainder of this tutorial, I will focus on another very important aspect of modern web development: communication between the web browser and the server without reloading the page. This is often referred to as *Ajax*.
 
 This is a good opportunity to recap the basics of HTTP, since you must understand HTTP clearly to properly understand how to program such a website. HTTP is a request-response protocol: There are things called "clients" that sends requests, and there are things called servers that "serves" these requests with a response. The protocol is the foundation of the the World Wide Web, which kind of means it's the foundation of the Internet, which kind of means it's the foundation of all things you love and hold dear. The most familiar HTTP client is your own web browser. A server is whatever program answers these requests: we built one in Lesson 3 when we talked about backend programming.
 
@@ -261,8 +262,6 @@ If you see a lot more requests, it might be because you're using some chrome ext
 
 Notice how the network monitor clearly tells us where each request was made, the request method (or HTTP verb), and the status code of the response. You can click on each of those to get a more detailed description of them.
 
-Now, how did exactly did we make the get request? We typed in the url in the browser, and it seemed to have constructed the complicated GET request all by itself. Actually it seems to be doing a lot more than just one request - it's also figuring out there are different contents it needs to fetch from many different places, and it's creating about a 100 HTTP requests to get all that material. That's cool - but what do I do if I want to make a single HTTP request and see it's content? We'll use something called POSTMAN to do this. You can install it from here (https://chrome.google.com/webstore/detail/postman-rest-client/fdmmgilgnpjigdojojpjoooidkmcomcm?hl=en).
-
 If you didn't attend the tutorial, I leave it to you as an exercise to explain why the requests are made in that particular order. 
 
 But so far the requests are not really under your control - the browser automatically decides how to send these requests. Wouldn't it be cool if you could send a custom HTTP request and see the raw response? Enter Postman.
@@ -283,7 +282,7 @@ Note that there the object returned is exactly the notation we used to define ob
 
 ## Our own JSON-enabled server
 
-A package is provided in the git repo with the server code. I'll develop a feature on top of it live, but after the tutorial you're strongly suggested to develop the same features yourself. If you encounter any difficulties, post in Hack 101 hackers :)
+The flask-package directory in the git repo has the code of an app that consumes and serves JSON. I'll develop a feature on top of it live and you may not have time to implement these features on your computer right now, but after the tutorial you're strongly suggested to develop the same features yourself. If you encounter any difficulties, post in Hack 101 hackers :)
 
 The server serves index.html, which is the same jsdemo.html page with an additional name input field.
 
@@ -350,7 +349,7 @@ test()
 // Test function executed
 ```
 
-Now that we have our testing loop set up, we focus on the jquery function to send http requests. Our swiss army knife here is [$.ajax](http://api.jquery.com/jquery.ajax/). To send a `POST` request with it, we do the following:
+Now that we have our testing loop set up, we focus on the jQuery function to send http requests. Our swiss army knife here is [$.ajax](http://api.jquery.com/jquery.ajax/). To send a `POST` request with it, we do the following:
 ```javascript
 var test = function() {
     $.ajax({
@@ -444,9 +443,9 @@ $("#messageForm").on("submit", function(){ alert(1);})
 
 We fill in `debug42` for _name_ and `debug424242` for _message_, click submit, and oops, it doesn't look like it's working. But we want to check if any request made it to the server anyway, so we check the messages on the server (of course, by sending a `GET` to http://localhost:5000/messages). To our surprise, our message made it through! We see `debug424242` as the last message.
 
-Now what is happening here? Our function gets executed all right, but **it does not override the default behavior of submit**, which is to go to another page. How do we prevent the default behavior? What I never mentioned is that every callback function registered to an event gets called with an *argument*, which is an object representing the event. If you're a Java/Python/C/C++ coder, all sorts of alarm bells should be going off - I'm saying the callback function is called with an argument (like `function(arg1)`), but our function never accepted an argument (it is defined like `function() {...}`. Shouldn't this throw fatal errors? Curiously enough, as we may have mentioned in the js syntax review, in JavaScript passing in more arguments than your function accepts is not an error - your function will just not have access to those arguments.
+Now what is happening here? Our function gets executed all right, but **it does not override the default behavior of submit**, which is to go to another page and sending the HTTP request. How do we prevent the default behavior? What I never mentioned is that every callback function registered to an event gets called with an *argument*, which is an object representing the event. If you're a Java/Python/C/C++ coder, all sorts of alarm bells should be going off - I'm saying the callback function is called with an argument (like `function(arg1)`), but our function never accepted an argument (it is defined like `function() {...}`. Shouldn't this throw fatal errors? Curiously enough, as we may have mentioned in the js syntax review, passing in more arguments than your function accepts is not an error in JavaScript - your function will just not have access to those arguments.
 
-Okay but now we _do_ need access to the first argument which will be the event, and jQuery provides a method named `preventDefault` that stops the regular behavior of an event. So we rewrite the function `test`: We rename it to a better name (`sendMessage`), we take `event` as an argument, and the first thing we do is call `preventDefault` on the event.
+Okay but now finally we _do_ need access to the first argument which will be the event, and jQuery provides a method named `preventDefault` that stops the regular behavior of an event. So we rewrite the function `test`: We rename it to a better name (`sendMessage`), we take event `e` as an argument, and the first thing we do is call `preventDefault` on the event.
 
 ```javascript
 var sendMessage = function(e) {  // e stands for event
