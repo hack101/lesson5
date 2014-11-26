@@ -1,22 +1,6 @@
 Lesson 5: Interactivity and more JavaScript
 ===========================================
 
-(Meta: to be deleted)
-
-I won't be covering too much detail about jquery - I'd rather send people over to the jQuery tutorials, which is quite accessible and comprehensive. I'll introduce the key features of JavaScript they should be aware of (most importantly functions in variables), talk about the basic concept of selecting an element an doing something with it (and introducing new tags/ids/classes to help select something better), how to work with the console and develop iteratively by testing commands interactively and building functions out of them, what events are in general, and issues with document.ready etc that stump a lot of newcomers. Then I'll give a quick demo of how to do HTTP requests in the background, which will require a small recap of HTTP requests. I'll also show the chrome network monitor and debugger, just so that they know these exist and are useful.
-
-Overview:
--  10-15 minute overview of Javascript syntax
--  15 minute of developing a small functionality on the spot, with tips on using the chrome console and some very basic debugging features
--  10-15 minutes of going over HTTP again, and familiarizing them with the idea that you can send JSON instead of HTML which is easier to work with when you want to communicate data. Show uses of Chrome network monitor, and testing an API with POSTMAN. Give them a modified version of the flask app from lesson 3 that handles JSON.
--  String together two ajax calls to show how you can communicate with the server and update the page without reloading.
-
-
-I'm concerned that the tutorial is too long. I might have to cut back on some of the things I described here if I run out of time. 
-
-(EndMeta)
-
-
 Hello everyone, we will start off with a quick review of javascript, please check _jssyntax.md_.
 
 Hopefully now that we're more comfortable with the JavaScript syntax, let's see how we can change contents of the page using JavaScript. 
@@ -50,6 +34,10 @@ In tutorial 3, we made a comment box for the site. In `jsdemo.html`, we've set u
 ```
 
 Let's say we want to count the number of characters in the textbox. We could, of course, click submit, and look at the text content on the server, count the characters, and send back a rerendered page with the number of characters, but that's clunky and requires reloading the page everytime. We want to do this live.
+
+(Sidenote: To see why we want to avoid server-side processing whenever we can , imagine your server is sitting in an Amazon data center in Oregon, and your user is on the other side of the world in Thialand. The distance between Oregon and Thailand is 7546 miles, and the speed of light is about 186,000 mles per second. Even if we send messages at the speed of light, it will take us 7546 / 186000 ≈ 40 miliseconds to trasmit one single message. One HTTP request response cycle requires the exchange of at least 4 messages (at least tcp - tcp-ack - tcp - tcp-ack, but in practice probably more). So even at speed of light, we will need 160 miliseconds to complete the exchange. Now trans-pacific messages are most certainly _NOT_ exchanged at the speed of light, and even if we generously assume that we can exchange messages at half the speed of light, we're looking at a 320 milisecond delay. This means you can only update the count about 3 times a second. The average person types more than three characters per second, and she will most certainly notice the lag.
+
+We only looked at data exchange speed, but what about server load? If you 10,000 users typing at any given second, and you wish to update the count for all of them 3 times per second, you need to process 30,000 requests per second. This is not an easy task - you can of course do it with ingenious load-balancing amongst lots of different servers, but it will cost you a fortune to provide this service.)
 
 First order of business: Let's add another div on top.
 ```html
@@ -223,19 +211,6 @@ For the remainder of this tutorial, I will focus on another very important aspec
 
 This is a good opportunity to recap the basics of HTTP, since you must understand HTTP clearly to properly understand how to program such a website. HTTP is a request-response protocol: There are things called "clients" that sends requests, and there are things called servers that "serves" these requests with a response. The protocol is the foundation of the the World Wide Web, which kind of means it's the foundation of the Internet, which kind of means it's the foundation of all things you love and hold dear. The most familiar HTTP client is your own web browser. A server is whatever program answers these requests: we built one in Lesson 3 when we talked about backend programming.
 
-(Meta: This section should be refactored to include more demo with network monitor and less/no talking about requests/responses in plaintext. Also need to talk about request payload for POST requests, since we use it later.)
-
-Things to put in here:
-
-- Take look at network monitor (change the later section where you first introduce network monitor)
-- Look at different fields.
-- Do a view source
-- Look at a post request and talk about request payload
-- Look at response (well there shouldn't be much to talk about any more)
-
-(endMeta)
-
-
 When you load the jsdemo.html page, do you know how many HTTP requests the browser makes? It is worth looking through the HTML code and thinking about it for a bit. How would you find out for sure? Chrome has a very handy network monitor that lets you see exactly what requests the browser is making. Open the developer tools, and navigate to the Network tab. Now reload the page. You should see at least four requests being made:
 
 ![network](screenshots/network.png)
@@ -246,14 +221,17 @@ Notice how the network monitor clearly tells us where each request was made, the
 
 If you didn't attend the tutorial, I leave it to you as an exercise to explain why the requests are made in that particular order. 
 
-(Meta: 
+Now this page is being loaded from the harddrive as a simple HTML file (i.e. they're not really being served by a server.) Therefore things are HTTP status codes are not available in these requests. To get a better idea about HTTP, we will look at a real website, say http://github.com. If we click the first `GET` request, we see this: 
 
-Things to add here:
+![githubGetSimple](screenshots/githubGetSimple.png)
 
-- Look in detail at a GET request
-- Look in detail at a POST request, along with the payload (Need to find a site that sends json data instead of form encoding)
-- Look in detail at a response
-)
+The things you should pay special attention to are pointed to with the purple arrow:
+
+- The request has a particular method. It can be one of GET/POST/PUT/DELETE/PATCH/OPTIONS etc. These are sometimes called HTTP *verbs*. These are often also referred to as the *type* of the request. So you'll often hear people asking what *type* of request we're receiving, and they usually mean the HTTP method.
+- The status code: This comes with the response, and gives a very short three digit summary of the status of the response. You can learn about HTTP status codes here: http://en.wikipedia.org/wiki/List_of_HTTP_status_codes. 
+- Content-type: Each HTTP request and response is divided into two parts: headers and content (the content is often referred to as *payload*.) The content-type header tells you what the type of the content it. It can be something like `text/html`, meaning the payload is purely html, or `application/json`, meaning the payload is of the data format json, or lots of other things. These types are often referred to as *Internet media types*, and they are also often referred to as *MIME types*. You can learn more about them here: http://en.wikipedia.org/wiki/Internet_media_type. Sometimes messages do not have any content, in which case the *Content-type* header is skipped.
+
+During the tutorial we will also look at the soundcloud website, and show an example of a json response. 
 
 But so far the requests are not really under your control - the browser automatically decides how to send these requests. Wouldn't it be cool if you could send a custom HTTP request and see the raw response? Enter Postman.
 
@@ -590,7 +568,7 @@ The value of msg is "["? What? Even more confused, we set a breakpoint inside th
 
 ![data625](screenshots/data625.png)
 
-We press `ESC` to open up the console in the current console (I swear to god this feature is Godsent). I type in `data`:
+We press `ESC` to open up the console in the current context (I swear to god this feature is Godsent). I type in `data`:
 ```javascript
 data
 // prints out a massive string
