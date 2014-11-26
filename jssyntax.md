@@ -143,7 +143,7 @@ Look at this code:
 ```javascript
 // Example 1
 function sayHello(name) {
-    console.log("Hello" + " name + "!");
+    console.log("Hello" + name + "!");
 }
 
 sayHello("Turing");
@@ -151,7 +151,7 @@ sayHello("Turing");
 
 // Example 2
 var sayHello = function(name) {
-    console.log("Hello + " name + "!");
+    console.log("Hello" + name + "!");
 };
 
 sayHello("Turing");
@@ -168,7 +168,7 @@ greet("Turing");  // This is executing the same function.
 - You can take in a function as an argument of another function: 
 ```javascript
 var sayHello = function(name) {
-    console.log("Hello + " name + "!");
+    console.log("Hello " + name + "!");
 };
 
 var sayHey = function(name) {
