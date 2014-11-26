@@ -143,7 +143,7 @@ Look at this code:
 ```javascript
 // Example 1
 function sayHello(name) {
-    console.log("Hello + " name + "!");
+    console.log("Hello" + " name + "!");
 }
 
 sayHello("Turing");
